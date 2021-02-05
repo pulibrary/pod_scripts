@@ -1,7 +1,7 @@
 # data output directories
-/bibdata
-/filtered
-/unwrapped
+/bibdata/*
+/filtered/*
+/unwrapped/*
 
 # compiled classes
 /*.class

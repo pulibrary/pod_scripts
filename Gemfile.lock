@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    marc (1.0.4)
+      scrub_rb (>= 1.0.1, < 2)
+      unf
+    scrub_rb (1.0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  marc
+
+BUNDLED WITH
+   2.1.4

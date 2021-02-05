@@ -19,3 +19,6 @@ n.b., a full dump convereted using these scripts, requires about 15GB of disk sp
     ```
     ./filter.sh
     ```
+
+  this uses the java implementation in filter.java, which is much, much faster than the ruby
+  implementation in filter.rb.

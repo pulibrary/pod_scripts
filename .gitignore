@@ -1,0 +1,12 @@
+# data output directories
+/bibdata
+/filtered
+/unwrapped
+
+# compiled classes
+/*.class
+
+# misc temp files
+.DS_Store
+.*.swp
+

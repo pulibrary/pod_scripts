@@ -4,7 +4,7 @@
 # this script removes the pointless tar wrapper and re-gzips them
 
 cd unwrapped
-rm *.gz
+rm -f *.gz
 for i in ../bibdata/*.tar.gz; do
   BASE=`basename $i .tar.gz`
   tar Oxvfz $i | gzip -c > $BASE.xml.gz

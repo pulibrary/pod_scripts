@@ -6,7 +6,7 @@ echo compiling...
 javac -cp $CP filter.java 
 if [ $? = 0 ]; then
   echo removing output files...
-  rm -rf filtered/*
+  rm -f filtered/*
 
-  java -cp $CP:. filter xml/*
+  java -cp $CP:. filter unwrapped/*
 fi

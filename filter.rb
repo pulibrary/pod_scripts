@@ -10,11 +10,13 @@ require "zlib"
 records = []
 
 def write_records(records)
+  return if records.count == 0
   @n += 1
-  fn = "ruby/ruby_%04d.mrc.gz" % @n
+  fn = "./pod_files_ruby/ruby_%04d.xml" % @n
   puts "#{DateTime.now} writing #{fn}..."
-  writer = MARC::Writer.new(Zlib::GzipWriter.new(File.open(fn, "w")))
-  writer.allow_oversized = true
+  writer = MARC::XMLWriter.new(File.open(fn, "w"))
+  # Needed when using MARC binary
+  # writer.allow_oversized = true
   records.each { |r| writer.write(r) }
   writer.close
 end
@@ -26,7 +28,7 @@ end
 
 ARGV.each do |f|
   puts "#{DateTime.now} reading #{f}"
-  reader = MARC::XMLReader.new(Zlib::GzipReader.open(f))
+  reader = MARC::XMLReader.new(File.open(f))
   reader.each do |record|
     if oclc?(record)
       record.fields("583").each { |priv| record.fields.delete(priv) }

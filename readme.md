@@ -1,24 +1,36 @@
-# scripts for exporting PUL marc data for POD
+# Scripts for exporting PUL marc data for POD
+Processes MARC full dumps from Alma and creates MARC files that we can upload to POD.
 
-n.b., a full dump convereted using these scripts, requires about 15GB of disk space
+These scripts assume the MARC files have been downloaded and expanded and that they are in MARC XML format.
 
-1. download the most recent full dump from alma into the bibdata directory:
+There are about 113 MARC files in a full dump.
 
-    ```
-    ./bibdata.rb
-    ```
 
-2. repackage to remove pointless tar wrappers and save xml.gz in unwrapped directory:
+## Ruby version
+The Ruby version lives is in `filter.rb`. This version takes about 8 minutes per file. This version relies on the `marc` gem.
 
-    ```
-    ./unwrap.sh
-    ```
+To test it update `pod_ruby.sh` with the location of the source MARC files and run it. The resulting files will be under `./pod_files_ruby/`
 
-3. remove records without oclc# and strip 583s
+```
+$ ./pod_ruby.sh
+```
 
-    ```
-    ./filter.sh
-    ```
 
-  this uses the java implementation in filter.java, which is much, much faster than the ruby
-  implementation in filter.rb.
+## Java version
+The Java version lives in `filter.java` and it takes a few seconds (~10) per file. This version uses the MARC processsing classes provided by `marc4j-2.9.1.jar`.
+
+To test it update `pod_java.sh` with the location of the source MARC files and run it. The resulting files will be under `./pod_files_java/`
+
+```
+$ ./pod_java.sh
+```
+
+
+## Go version
+The Go version lives in `pod_go.sh` and it takes about 40 seconds per file. The functionality to process the MARC files is provided via the `marcli` executable which is written in Go.
+
+To test it update `pod_go.sh` with the location of the source MARC files and run it. The first time you run it you'll need to download the `marcli` utility, see instructions in the script. The resulting files will be under `./pod_files_go/`
+
+```
+$ ./pod_go.sh
+```

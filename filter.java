@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.marc4j.MarcXmlReader;
+import org.marc4j.MarcXmlWriter;
 import org.marc4j.MarcStreamWriter;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
@@ -30,7 +31,9 @@ public class filter {
     int skipped = 0;
     ArrayList<Record> records = new ArrayList();
     for (int i = 0; i < args.length; i++) {
-      MarcXmlReader in = new MarcXmlReader(new GZIPInputStream(new FileInputStream(args[i])));
+      System.out.println(timestamp() + " reading " + args[i] + "...");
+      MarcXmlReader in = new MarcXmlReader(new FileInputStream(args[i]));
+      int includedInFile = 0;
       while (in.hasNext()) {
         Record record = in.next();
 
@@ -42,40 +45,50 @@ public class filter {
           for (Iterator<Subfield> iterator = ident.iterator(); !oclc && iterator.hasNext(); ) {
             Subfield subfield = iterator.next();
             if (subfield.getData().indexOf("OCoLC") != -1)
-              oclc = true; 
-          } 
-        } 
+              oclc = true;
+          }
+        }
         if (oclc) {
           // remove any private notes (583)
           DataField priv = (DataField)record.getVariableField("583");
           if (priv != null) {
-            record.removeVariableField(priv); 
+            record.removeVariableField(priv);
           }
           records.add(record);
           included++;
+          includedInFile++;
         } else {
           skipped++;
         }
 
-        // in batches of 50k records, write to disk in gzipped marc21 files
+        // in batches of 50k records, write to disk
         if (records.size() == 50000) {
           fileCount++;
-          String fn = String.format("filtered/pul_" + dateStamp + "_%04d.mrc.gz", fileCount);
-          System.out.println(timestamp() + " writing " + fn + "...");
-          MarcStreamWriter writer = new MarcStreamWriter(
-            new GZIPOutputStream(new FileOutputStream(fn)), true);
-          for (int x = 0; x < records.size(); x++) {
-            writer.write(records.get(x)); 
-          }
-          writer.close();
-          records.clear();
-        } 
-      } 
-    } 
+          writeFile(fileCount, records);
+          includedInFile = 0;
+        }
+      }
+      if (includedInFile > 0) {
+          fileCount++;
+          writeFile(fileCount, records);
+      }
+    }
+
     System.out.println(timestamp() + " done, " + included + " records exported, " + skipped + " skipped");
   }
-  
+
   private static String timestamp() {
     return tsfmt.format(new Date());
+  }
+
+  private static void writeFile(int fileCount, ArrayList<Record> records) throws Exception  {
+    String fn = String.format("pod_files_java/pul_" + dateStamp + "_%04d.xml", fileCount);
+    System.out.println(timestamp() + " writing " + fn + "...");
+    MarcXmlWriter writer = new MarcXmlWriter(new FileOutputStream(fn), true);
+    for (int x = 0; x < records.size(); x++) {
+      writer.write(records.get(x));
+    }
+    writer.close();
+    records.clear();
   }
 }

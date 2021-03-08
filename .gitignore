@@ -1,7 +1,10 @@
 # data output directories
-/bibdata/*
-/filtered/*
-/unwrapped/*
+/pod_files_go/*
+/pod_files_ruby/*
+/pod_files_java/*
+
+# marcli utility
+marcli
 
 # compiled classes
 /*.class
@@ -9,4 +12,3 @@
 # misc temp files
 .DS_Store
 .*.swp
-

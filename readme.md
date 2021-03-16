@@ -5,6 +5,38 @@ These scripts assume the MARC files have been downloaded and expanded and that t
 
 There are about 113 MARC files in a full dump.
 
+Some timing information from my local machine:
+* ~25 minutes to produce the new MARC files with the Java version of the code.
+* ~10 minutes to compress the files.
+* ~3 hours to upload the files to POD.
+
+
+# Workflow
+
+Download MARC dump files produced by Alma and uncompress them:
+
+```
+./download.sh
+```
+
+
+Generate the MARC files for POD (removes private notes and only include records with OCLC numbers)
+
+```
+./pod_java.sh
+```
+
+
+Compress and upload the files to POD
+
+```
+./upload.sh
+```
+
+
+# Code
+
+We tested three different ways of processing our MARC files: one in Ruby, one in Java, and one using a Go library.
 
 ## Ruby version
 The Ruby version lives is in `filter.rb`. This version takes about 8 minutes per file. This version relies on the `marc` gem.
